@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        window.addEventListener("DOMContentLoaded" , function(){
+            var btn = document.querySelector("button");
+            // 버튼을 클릭했을 때 ajax 를 이용하여 데이타를 가져와보자.
+            btn.onclick = function(){
+                // ajax를 사용하기 위한 객체 생성
+                var xhr = new XMLHttpRequest();
+                // XMLHttpRequest() : 비동기로 데이터를 요청하게 해줄수있게 해주는 역할
+
+                // xhr.onload 에 event 를 추가해주는 코드
+                xhr.onload = function(){
+
+                    if(xhr.status == 200){
+                        // 결과는 xhr.responseXML 이라는 속성으로 들어온다.
+                        console.log("결과 : " , xhr.responseXML);
+                        var data = xhr.responseXML;
+                        var names = data.querySelectorAll("name");
+                        var prices = data.querySelectorAll("price");
+
+                        // ul 과 li 를 이용하여 "이름-가격" 형태로 출력해보자
+                        var ul = document.createElement("ul");
+                        for(let i = 0; i< names.length; i++){
+                            let li = document.createElement("li")
+                            //console.log(names[i])
+                            console.dir(names[i])
+                            let str = names[i].textContent+"-"+prices[i].textContent;
+                            li.innerHTML = str;
+
+                            ul.append(li);
+                        }
+
+                        // div 에 ul 을 붙여주자
+                        document.getElementById("result").innerHTML = "";
+                        document.getElementById("result").append(ul);
+                    }
+                    else{
+                        console.log("정상적이지 않은 데이터");
+                    }
+                }
+
+                // 요청정보를 설정
+                // xhr.open("전송방식" , "요청URL" , "비동기여부")
+                xhr.open("get" , "http://localhost:8090/my/data.xml" , true) // true : 비동기 , false : 동기
+
+                                                                    // true 이면 서버가 데이터를 보내기전에 결과를 출력해서 null 이나오게된다.
+                                                                    // 이를 해결하기위해서 xhr.onload 에 event 를 추가해준다.
+
+                // 요청정보를 서버로 보냄
+                xhr.send();
+
+                // 결과는 xhr.responseXML 이라는 속성으로 들어온다.
+                // console.log("결과 : " , xhr.responseXML);
+
+            }
+
+        })
+    </script>
+</head>
+<body>
+    <h1>물품리스트</h1>
+    <button>물품리스트 가져오기</button>
+    <div id="result"></div>
+</body>
+</html>

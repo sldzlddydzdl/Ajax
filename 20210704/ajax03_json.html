@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ajax03_json.html</title>
+    <script>
+        window.addEventListener("DOMContentLoaded", function(){
+            document.querySelector("button").onclick = function(){
+                fetch("http://localhost:8090/my/data.json") // 비동기
+                    .then(function(response){ // then 이라는 함수가 애초에 load 가 되었을때 실행했을때 호출되는 함수이다.
+                        return response.json()
+                    })
+                    .then(function(myJsonData){
+                        console.log(myJsonData);
+                        // 데이타를 이용하여 테이블에 데이타를 넣어보자
+                        var table = document.getElementById("result");
+                        let nameTd;
+                        let ageTd;
+                        let skillTd;
+                        for(let i = 0; i < myJsonData.length; i++){
+                            let tr = document.createElement("tr");
+
+                            nameTd = document.createElement("td");
+                            nameTd.innerHTML = myJsonData[i].name;
+                            tr.append(nameTd);
+                            if(myJsonData[i-1] != null && myJsonData[i-1].age == myJsonData[i].age){
+                                ageTd.rowSpan++;
+                            }else{
+                                ageTd = document.createElement("td");
+                                ageTd.innerHTML = myJsonData[i].age;
+                                ageTd.rowSpan = 1;
+                                tr.append(ageTd);
+                            }
+
+                            skillTd = document.createElement("td");
+                            for(s of myJsonData[i].skill){
+                                skillTd.innerHTML += s+" ";
+                            }
+
+                            tr.append(skillTd);
+
+                            table.append(tr);
+                        }
+
+
+
+                    })
+            }   
+        })
+    </script>
+</head>
+<body>
+    <h1>fetch api 를 이용한 비동기</h1>
+    <button>데이타 가져오기</button>
+    <table id="result" border="1">
+
+    </table>
+</body>
+</html>

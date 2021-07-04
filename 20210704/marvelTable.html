@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>marvelTable.html</title>
+    <style>
+        table{
+            width:800px;
+            height:800px;
+            border: 1px black double;   
+        }
+        td,th{
+            border-width: 2px;
+            border-color: black;
+            border-style: solid;  
+        }
+        figcaption{
+            font-size: 40px;
+            font-weight: bolder;
+            margin-left: 280px;
+        }
+    </style>
+    <script>
+        window.addEventListener("DOMContentLoaded", function(){
+            document.querySelector("button").onclick = function(){
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function(){
+
+                    if(xhr.status == 200){
+                        var data = xhr.responseText;
+                        console.log(data);
+
+                        var movie = JSON.parse(data);
+
+                        document.getElementById("result").innerHTML="";
+                        
+                        var table = document.querySelector("table");
+                        var TableTr = document.createElement("tr"); 
+                        table.append(TableTr);
+
+                        let th1 = document.createElement("th");
+                        let th2 = document.createElement("th");
+                        let th3 = document.createElement("th");
+                        let th4 = document.createElement("th");
+                        let th5 = document.createElement("th");
+
+                        TableTr.append(th1);
+                        TableTr.append(th2);
+                        TableTr.append(th3);
+                        TableTr.append(th4);
+                        TableTr.append(th5);
+                        
+                        th1.innerText="연도";
+                        th2.innerText="한국제목";
+                        th3.innerText="영어제목";
+                        th4.innerText="감독";
+                        th5.innerText="현재상태";
+
+                        for(m of movie){
+                            let tr = document.createElement("tr");
+                            table.append(tr);
+                            let year = m.year;
+                            let titleKor = m.titleKor;
+                            let titleEng = m.titleEng;
+                            let director = m.director;
+                            let status = m.status;
+
+
+
+                            for(let i = 0; i < 5; i++){
+                                let td = document.createElement("td");
+                                if(i == 0){
+                                    tr.append(td);
+                                    td.innerHTML = year;
+                                }
+                                else if(i ==1){
+                                    tr.append(td);
+                                    td.innerHTML = titleKor;
+                                }
+                                else if(i ==2){
+                                    tr.append(td);
+                                    td.innerHTML = titleEng;
+                                }
+                                else if(i ==3){
+                                    tr.append(td);
+                                    td.innerHTML = director;
+                                }
+                                else if(i ==4){
+                                    tr.append(td);
+                                    td.innerHTML = status;
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+                xhr.open("get" , "http://localhost:8090/my/marvel.json" , true);
+                xhr.send();
+            }
+        })
+    </script>
+</head>
+<body>
+    <h1>마블 정보 표</h1>
+    <button>표 가져오기</button>
+    <figure>
+        <figcaption>영화 정보들</figcaption><br>
+        <table id = "result">
+
+        </table>
+    </figure>
+</body>
+</html>

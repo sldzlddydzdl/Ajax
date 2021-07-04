@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ajax02_json.html</title>
+    <script>
+        window.addEventListener("DOMContentLoaded" , function(){
+            document.querySelector("button").onclick = function(){
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function(){
+                    if(xhr.status == 200){
+                        var data = xhr.responseText;
+                        // console.log(data);
+
+                        // json 포멧의 문자열을 javascript 객체형태로 바꾸자
+                        var people = JSON.parse(data);
+                        console.log(people[0].name);
+
+                        // ul에 li 만들어서 출력
+                        // 이름-나이[취미1, 취미2, 취미3]
+                        var ul = document.createElement("ul");
+                        for(p of people){
+                            let li = document.createElement("li");
+                            let str = p.name+"-"+p.age+"["+p.skill[0]+","+p.skill[1]+","+p.skill[2]+"]";
+                            li.innerHTML = str;
+                            ul.append(li);
+                        }
+                        document.getElementById("result").innerHTML="";
+                        document.getElementById("result").append(ul);
+                    }else{
+                        console.log("잘못된 데이타");
+                    }
+                }
+
+                xhr.open("get" , "http://localhost:8090/my/data.json" , true);
+                xhr.send()
+            }
+        })
+    </script>
+</head>
+<body>
+    <h1>ajax 로 json 가져오기</h1>
+    <button>데이타 가져오기</button>
+    <dir id="result"></dir>
+</body>
+</html>
